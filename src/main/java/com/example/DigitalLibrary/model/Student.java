@@ -41,4 +41,7 @@ public class Student {
 
     @OneToMany(mappedBy = "student")
     List<Book> list;
+
+    @OneToMany(mappedBy = "student")
+    List<Txn> listTxn;
 }

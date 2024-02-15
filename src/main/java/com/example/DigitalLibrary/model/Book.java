@@ -1,16 +1,16 @@
 package com.example.DigitalLibrary.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class Book {
     @Column(length = 30)
     private String name;
 
-    private String BookNo;
+    private String bookNo;
 
     private int cost;
 
@@ -29,4 +29,11 @@ public class Book {
     @ManyToOne
     @JoinColumn
     private Student student;
+
+    @ManyToOne
+    @JoinColumn
+    private Author author;
+
+    @OneToMany(mappedBy = "book")
+    private List<Txn> txnList;
 }
