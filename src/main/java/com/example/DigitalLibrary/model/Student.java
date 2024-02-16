@@ -25,19 +25,19 @@ public class Student {
     @Column(length=30, unique = true)
     private String email;
 
-    @Column(length = 10,unique = true,nullable = false)
-    private String phonenNo;
+    @Column(name="phoneNo",length = 10,unique = true,nullable = false)
+    private String phoneNo;
 
     private String address;
+
+    @Enumerated(value=EnumType.STRING)
+    private StudentType status;
 
     @CreationTimestamp
     private Date createdOn;
 
     @UpdateTimestamp
     private Date updatedOn;
-
-    @Enumerated(value=EnumType.STRING)
-    private StudentType status;
 
     @OneToMany(mappedBy = "student")
     List<Book> list;

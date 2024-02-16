@@ -1,5 +1,6 @@
 package com.example.DigitalLibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -32,6 +33,7 @@ public class Book {
 
     @ManyToOne
     @JoinColumn
+    @JsonIgnoreProperties("bookList")
     private Author author;
 
     @OneToMany(mappedBy = "book")
