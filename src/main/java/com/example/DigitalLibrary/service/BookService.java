@@ -46,4 +46,8 @@ public class BookService {
         return bookRepository.save(book);
     }
 
+    public void saveUpdate(Book book){
+        bookRepository.save(book);
+    }
+
 }
