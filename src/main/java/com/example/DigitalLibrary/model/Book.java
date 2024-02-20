@@ -1,5 +1,6 @@
 package com.example.DigitalLibrary.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
@@ -37,5 +38,6 @@ public class Book {
     private Author author;
 
     @OneToMany(mappedBy = "book")
+    @JsonIgnore
     private List<Txn> txnList;
 }

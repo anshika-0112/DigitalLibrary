@@ -71,14 +71,14 @@ public class TxnService {
     }
 
     @Transactional(rollbackFor = {TxnException.class})
-    public int returnBook(TxnReturnRequest txnReturnRequest) throws Exception {
+    public int returnBook(TxnReturnRequest txnReturnRequest) throws TxnException {
         Student student=filterStudent(StudentFilterType.CONTACT,Operator.EQUALS, txnReturnRequest.getStudentContact());
         Book book=filterBook(FilterType.BOOK_NO,Operator.EQUALS, txnReturnRequest.getBookNo());
 
         if(book.getStudent()!=null && book.getStudent().equals(student)){
             Txn txn=txnRepository.findByTxnId(txnReturnRequest.getTxnId());
             if(txn==null){
-                throw new Exception("No transaction has been found with this transaction id");
+                throw new TxnException("No transaction has been found with this transaction id");
             }
             int amount = calculateSettlementAmount(txn);
             if(amount== txn.getPaidAmount()){
