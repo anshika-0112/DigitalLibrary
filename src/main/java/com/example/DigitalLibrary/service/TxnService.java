@@ -33,7 +33,7 @@ public class TxnService {
     private String finePerDay;
 
 
-    private Student filterStudent(StudentFilterType studentFilterType,Operator operator, String value) throws TxnException {
+    public Student filterStudent(StudentFilterType studentFilterType,Operator operator, String value) throws TxnException {
         List<Student> studentList=studentService.filter(StudentFilterType.CONTACT, Operator.EQUALS,value);
         if(studentList==null || studentList.isEmpty()){
             throw new TxnException("Student is not registered to the Library");
@@ -97,7 +97,7 @@ public class TxnService {
         }
     }
 
-    private int calculateSettlementAmount(Txn txn) {
+    public int calculateSettlementAmount(Txn txn) {
         long issueTime = txn.getCreatedOn().getTime();
         long returnTime= System.currentTimeMillis();
         long timeDiff=returnTime-issueTime;
