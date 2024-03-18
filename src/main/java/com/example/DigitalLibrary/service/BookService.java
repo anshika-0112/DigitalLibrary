@@ -3,6 +3,7 @@ package com.example.DigitalLibrary.service;
 import com.example.DigitalLibrary.model.*;
 import com.example.DigitalLibrary.repository.AuthorRepository;
 import com.example.DigitalLibrary.repository.BookRepository;
+import com.example.DigitalLibrary.repository.RedisDataRepository;
 import com.example.DigitalLibrary.request.BookCreateRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,11 +19,23 @@ public class BookService {
     @Autowired
     private AuthorRepository authorRepository;
 
+    @Autowired
+    private RedisDataRepository redisDataRepository;
+
     public List<Book> filter(FilterType filterBy, Operator operator, String value) {
         switch (operator){
             case EQUALS:
                 switch (filterBy){
-                    case BOOK_NO : return bookRepository.findByBookNo(value);
+                    case BOOK_NO :
+                        List<Book> list=redisDataRepository.getBookByBookNo(value);
+                        if(list!=null && !list.isEmpty()){
+                            return list;
+                        }
+                        list=bookRepository.findByBookNo(value);
+                        if(!list.isEmpty()){
+                            redisDataRepository.setBookToRedisByBookNo(list.get(0));
+                        }
+                        return list;
                     case AUTHOR_NAME: return bookRepository.findByAuthorName(value);
                     case COST:return bookRepository.findByCost(Integer.parseInt(value));
                     case BOOK_TYPE: return bookRepository.findByType(BookType.valueOf(value));
@@ -43,7 +56,9 @@ public class BookService {
         }
         Book book= bookCreateRequest.toBook();
         book.setAuthor(author);
-        return bookRepository.save(book);
+        book=bookRepository.save(book);
+        redisDataRepository.setBookToRedis(book);
+        return book;
     }
 
     public void saveUpdate(Book book){
